@@ -1,0 +1,164 @@
+.bod{
+    /*background-image: url(../resources/bd1.jpg);*/
+    background-repeat: no-repeat;
+    background-size: 100% ;
+    background: linear-gradient(to left top,#e2c77a, #16242f);
+    height: 80%;
+}
+.div1{
+    width: 850px;
+    height: 413px;
+    background-color: rgba(244, 240, 230, .5);
+    border-radius: 15px;
+    margin: 0 auto;
+
+}
+
+.labels{
+    font-weight:bold;
+    color: black;
+
+}
+.pnl{
+
+    width: 400px;
+    background-color:transparent;
+    border-radius:8px;
+    margin-left: 230px;
+
+
+}
+#pnlgrd{
+    border-radius: 6px;
+}
+#plateforme{
+  width: 140px;
+
+}
+.filac{
+    width:165px;
+}
+.tran{
+    width: 180px;
+}
+#tra{
+    margin-left: 350px;
+    font-weight:bold;
+    color: black;
+}
+/*#tranche{
+    width:190px;
+    display: inline-flex;
+    border: 1px solid #d6d6d6;
+    margin-top: 15px;
+}*/
+.field{
+    margin-top: 10px;
+    margin-left: 60px;
+    width:720px;
+}
+.leg{
+    font-weight:bold;
+    color: black;
+}
+.td{
+    padding-left: 43px;
+}
+#ho{
+    margin-left: 350px;
+    font-weight:bold;
+    color: black;
+}
+#fe{
+    font-weight:bold;
+    color: black;
+}
+.bAjouter{
+    margin-left: 750px;
+}
+.gouver{
+    width: 180px;
+}
+.inputT{
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border-color: tomato;
+    border-top-color: yellowgreen;
+    padding-left: 10px;
+    align-content: center;
+}
+.pourcent{
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+
+}
+#txH{
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border-color: tomato;
+    border-top-color: yellowgreen; 
+    padding-left: 10px;
+    width: 65px;
+}
+#txF{
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border-color: tomato;
+    border-top-color: yellowgreen;
+    padding-left: 10px;
+    width: 100px;
+}
+#nbrNFans{
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border-color: tomato;
+    border-top-color: yellowgreen;
+    padding-left: 10px;
+}
+#j_idt40:gouvernorat{
+    width: 174px;
+}
+.bValider{
+    margin-left: 1000px;
+}
+.la1{
+    font-family:tahoma, geneva, sans-serif;
+    color:#932222;
+    font-weight:bold;
+}
+.ui-accordion .ui-accordion-header{
+    border-radius: 16px;
+
+}
+ .ui-accordion-content{
+   background-color: rgba(244, 240, 230, 0.5);
+   border-radius: 16px;
+}
+
+.bb {
+    -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
+    animation-name: example;
+    animation-duration: 2s;
+    animation: example 2s infinite;
+    /*animation: mymove 5s infinite;*/
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes example {
+    0%   {background-color: red;}
+    25%  {background-color: yellow;}
+    50%  {background-color: blue;}
+    100% {background-color: green;}
+}
+@keyframes mymove {
+    from {left: 0px;}
+    to {left: 200px;}
+}
+/* Standard syntax */
+@keyframes example {
+    50%   {background-color: #ff7b00;}
+    100% {background-color: green;}
+}

@@ -1,0 +1,7 @@
+.bod{
+    /*background-image: url(../resources/bd1.jpg);*/
+    background-repeat: no-repeat;
+    background-size: 100% ;
+    background: linear-gradient(to left top,#e2c77a, #16242f);
+    height: 80%;
+}

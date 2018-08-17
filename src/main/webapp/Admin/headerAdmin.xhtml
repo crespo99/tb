@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Header</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="header.css"></link>
+        <script type="text/javascript" src="fichier.js"></script>
+    </h:head>
+    <h:body>
+        <div class="topnav" id="myTopnav">
+            <a href="/digikeypfe/faces/${sessionScope.dossier}/acceuil.xhtml" class="active"><i class="fa fa-home"></i> Accueil</a>
+            <div class="dropdown">
+                <button class="dropbtn"><i class="fa fa-user"></i> ${sessionScope.nom} ${sessionScope.prenom}
+              </button>
+              <div class="dropdown-content">
+                  <h:outputLabel value="${sessionScope.role} : ${sessionScope.login}" class="role" style=""/>  
+                <h:form>
+                    <p:commandButton value="Mon compte" icon="fa fa-cogs" class="bt"/> 
+                    <p:commandButton value="Déconnexion" icon="fa fa-power-off" style="background:#f92a2a;" class="bt" actionListener="#{loginBean.doLogout()}"/> 
+                </h:form>
+              </div>
+            </div>
+            <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+            <p:submenu label="Actions" icon="fa-bell"></p:submenu>
+          </div>  
+    </h:body>
+</html>
+

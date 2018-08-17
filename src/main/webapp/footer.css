@@ -1,0 +1,154 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+
+
+.btt{
+            width:400px;
+            height:400px;
+            background:#fafafa;
+            box-shadow:2px 2px 8px #aaa;
+            
+            font: bold 30px "Comic Sans MS", cursive;
+            border-radius:50%;
+            color:#555;
+            margin: 0 auto;
+            margin-top: 100px;
+           
+            margin-bottom: 100px;
+           color: #4d0808;
+           cursor: pointer;
+}
+.btt2{
+            width:400px;
+            height:400px;
+            background:#fafafa;
+            box-shadow:2px 2px 8px #aaa;
+            
+            font: bold 30px "Comic Sans MS", cursive;
+            border-radius:50%;
+            color:#555;
+            margin-top: 100px;
+            margin-bottom: 100px;
+           cursor: pointer;
+}
+
+#myFooter {
+    
+    color:white;
+    padding-top: 10px;
+    position: absolute;
+    bottom: 0;
+}
+
+
+
+#myFooter .footer-copyright{
+	background-color: #383737;
+	padding-top:3px;
+	padding-bottom:3px;
+	text-align: center;
+}
+
+#myFooter .footer-copyright p{
+	margin:10px;
+	color: #ccc;
+}
+
+#myFooter ul{
+	list-style-type: none;
+    padding-left: 0;
+    line-height: 1.7;
+
+}
+
+#myFooter h5{
+	font-size: 18px;
+    color: white;
+    font-weight: bold;
+    margin-top: 30px;
+}
+
+#myFooter a{
+	color:#d2d1d1;
+	text-decoration: none;
+}
+
+#myFooter a:hover, #myFooter a:focus{
+	text-decoration: none;
+	color:white;
+}
+
+#myFooter .myCols{
+	text-align: center;
+}
+
+#myFooter .social-networks{
+	text-align: center;
+	padding-top: 30px;
+	padding-bottom: 38px;
+}
+
+#myFooter .social-networks a{
+    font-size: 32px;
+    margin-right: 5px;
+    margin-left: 5px;
+    color: #f9f9f9;
+    padding: 10px;
+    transition: 0.2s;
+}
+
+#myFooter .social-networks a:hover{
+	text-decoration: none;
+
+}
+
+#myFooter .facebook:hover{
+	color:#0077e2;
+}
+
+#myFooter .google:hover{
+	color:#ef1a1a;
+}
+
+#myFooter .twitter:hover{
+	color: #00aced;
+}
+
+@media screen and (max-width: 767px){
+	#myFooter {
+		text-align: center;
+                position: absolute;
+    bottom:0;
+    width:100%;
+    padding-top:50px;
+    height:50px;
+	}
+}
+
+
+
+/* CSS used for positioning the footers at the bottom of the page. */
+/* You can remove this. */
+
+
+
+
+
+.content{
+	flex: 1 0 auto;
+	-webkit-flex: 1 0 auto;
+	min-height: 200px;
+}
+
+#myFooter{
+	flex: 0 0 auto;
+    -webkit-flex: 0 0 auto;
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding-top:50px;
+    height:50px;
+}

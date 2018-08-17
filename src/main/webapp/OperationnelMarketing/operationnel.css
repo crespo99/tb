@@ -1,0 +1,73 @@
+.bod{
+    /*background-image: url(../resources/bd1.jpg);*/
+    background-repeat: no-repeat;
+    background-size: 100% 720px;
+    background: linear-gradient(to left top,#e2c77a, #16242f);
+}
+.container{
+    width: 1000px;
+    height: 500px;
+    text-align: center;
+    background-color: rgba(255, 255, 255,0.1);
+    border-radius: 15px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-top: 10px;
+}
+.ui-dialog-footer.ui-widget-content{
+    font-weight: bold;
+}
+.valider{
+    color: transparent;
+    background-color: green;
+    border-radius: 50%;
+}
+.reclame{
+    color: transparent;
+    background-color: red;
+    border-radius: 50%;
+}
+.encours{
+    color: transparent;
+    background-color: #ffb702;
+    border-radius: 50%;
+}
+.ui-tabs-panels{
+   border:1px solid #d5d5d5;
+}
+.labels{
+    font-weight:bold;
+    color: black;
+}
+.div1{
+    width: 700px;
+    height: 406px;
+    background-color: rgba(244, 240, 230, .5);
+    border-radius: 15px;
+    margin: 0 auto;
+
+}
+.pourcent{
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+.field{
+    margin-top: 10px;
+    margin-left: 60px;
+}
+.leg{
+    font-weight:bold;
+    color: black;
+}
+.ui-state-default.ui-corner-all.ui-ring-item.ui-ring-item-focus{
+    position: absolute;
+    top: 45px;
+    width: 118px;
+    height: 58px;
+    opacity: 1;
+    z-index: 280;
+    font-size: 15px;
+    left :10px;;
+}

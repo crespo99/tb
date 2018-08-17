@@ -1,0 +1,1410 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Administration</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="../header.css"></link>
+        <link rel="stylesheet" href="../footer.css"></link>
+        <link rel="stylesheet" href="./admin.css"></link>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+        <link rel="shorcut icon" href="../resources/Digikey-N.png"/>
+        <script type="text/javascript" src="fichier.js"></script>
+    </h:head>
+    <h:body>
+        <ui:include src="./headerAdmin.xhtml"/>
+        <br></br>
+        <p:tabView orientation="left" >
+                <p:tab title="Gérer les filiales">                    
+                    <table>
+                        <tr>
+                            <td>
+                                <i class="fa fa-group" style="color: #3dabb5;"></i>  
+                            </td>
+                            <td>
+                               <h:outputText  value="Gérer les filiales" style="padding-left:320px;font-weight: bold;font-size: 25px;color: #b20707;"/> 
+                            </td>
+                        </tr>
+                    </table>
+                    <h:form>
+                        <p:growl id="growl" showDetail="true"/> 
+                        <p:fieldset legend="Ajouter une filiale" style="width:80%;margin-left:-13px;border:1px solid #d5d5d5;" >
+                              <table>
+                                        <tr>
+                                            <td width="100" class="td">
+                                                <p:outputLabel value="Nom filiale:" class="labels" for="nom"/>
+                                            </td>
+                                            <td>
+                                                <p:inputText id="nom" value="#{gestionFilialeBean.filiale.nomFiliale}" style="width: 80%;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="nom" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                            </td>
+                                            <td class="td">
+                                                <p:outputLabel value="Pays:" class="labels" for="pays"/>
+                                            </td>
+                                            <td >
+                                                <p:selectOneMenu id="pays" class="filac" value="#{gestionFilialeBean.pay}" style="width: 60%;">
+                                                    <p:ajax listener="#{gestionFilialeBean.onPaysChange}" update="ville tt" />
+                                                    <f:selectItem itemLabel="Choisir pays" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{gestionFilialeBean.pays}" />
+                                                </p:selectOneMenu>                           
+                                            </td>
+                                            <td class="td">
+                                                <p:outputLabel value="Ville:" class="labels" for="ville"/>
+                                            </td>
+                                            <td>
+                                                <p:selectOneMenu id="ville" class="filac" value="#{gestionFilialeBean.filiale.ville}" style="width: 60%;">
+                                                    <f:selectItem itemLabel="Choisir ville" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{gestionFilialeBean.villes}" />
+                                                </p:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td">
+                                                <p:outputLabel value="Adresse:" class="labels" for="adresse"/>
+                                            </td>
+                                            <td>
+                                                <p:inputText  id="adresse" value="#{gestionFilialeBean.filiale.adresse}" style="width: 80%;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="adresse" regEx="/[a-zA-Z0-9 ç ê ô û î â é è à]/i"/>
+                                            </td>
+                                            <td class="td">
+                                                <p:outputLabel value="Téléphone:" class="labels" for="tel"/>
+                                            </td>
+                                            <td>
+                                                <p:outputLabel id="tt" value="#{gestionFilialeBean.num}" class="labels" style="color: tomato"/>
+                                                <p:inputText id="tel" value="#{gestionFilialeBean.filiale.telephone}" title="Ex: 12345678" style="width: 60%;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="tel" regEx="/[0-9]/i"/>
+                                                <p:tooltip id="toolTipFocus" for="tel" showEvent="focus" hideEvent="blur" position="top"/>
+                                            </td>
+                                   
+                                            <td class="td" >
+                                                <p:outputLabel value="Email:" class="labels" for="email"/>
+                                            </td>
+                                            <td>
+                                                <p:inputText  id="email" value="#{gestionFilialeBean.filiale.email}" style="width: 80%;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="email" mask="email"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <p:commandButton value="Ajouter" action="#{gestionFilialeBean.ajouter()}" update="books growl" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                            <td style="padding-left:10%;">
+                                                <p:commandButton value="Annuler" type="reset" icon="ui-icon-cancel"/>
+                                            </td>
+                                        </tr>
+                                    </table>                                                                                              
+                        </p:fieldset>
+                        <p:fieldset legend="Consulter les filiales" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">
+                            <p:dataTable style="width:100%;" value="#{gestionFilialeBean.filiales}" var="f" id="books" emptyMessage="Aucune filiale" draggableRows="true" resizableColumns="true">
+                                <p:column headerText="Nom filiale" style="width: 20%;">
+                                    <h:outputText value="#{f.nomFiliale}" />
+                                </p:column>
+                                <p:column headerText="Pays" style="width: 10%;">
+                                    <h:outputText value="#{f.pays}" />
+                                </p:column>
+                                <p:column headerText="Ville" style="width:10%;">
+                                    <h:outputText value="#{f.ville}" />
+                                </p:column>
+                                <p:column headerText="Adresse" style="width: 35%;">
+                                    <h:outputText value="#{f.adresse}" />
+                                </p:column>
+                                <p:column headerText="Téléphone" style="width: 20%;">
+                                    <h:outputText value="#{f.telephone}" />
+                                </p:column>
+                                <p:column headerText="Email" style="width: 40%;">
+                                    <h:outputText value="#{f.email}" />
+                                </p:column>
+                                <p:column headerText="Modifier" style="width: 15%;">
+                                    <p:commandLink  onclick="PF('dlg3').show();" style="padding-left: 20px;">
+                                        <i class="fa fa-edit"/>
+                                        <p:growl id="growl12" sticky="true" showDetail="true" life="3000" />
+                                        <p:dialog header="Modifier Filiale" widgetVar="dlg3" resizable="false" width="50%" height="50%">
+                                        
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="nf" value="Nom filiale:" />
+                                                    </td>
+                                                    <td>
+                                            <p:inputText id="nf" value="#{f.nomFiliale}"  label="Nom filiale" />
+                                            </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                  <td>  
+                                            <h:outputLabel for="pay" value="Pays:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="pay" value="#{f.pays}"  label="Pays" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="vil" value="Ville:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="vil" value="#{f.ville}"  label="Ville" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="ad" value="Adresse:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="ad" value="#{f.adresse}"  label="Adresse" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="tel" value="Télephone:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="tel" value="#{f.telephone}"  label="Télephone" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="em" value="Email:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="em" value="#{f.email}"  label="Email" />
+                                            </td>
+                                                </tr>
+                                            </table>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Modifier"  update="growl12 books" actionListener="#{gestionFilialeBean.modifierFiliale(f)}" 
+                                                                 onclick="PF('dlg3').hide();" />
+                                            </f:facet>  
+                                        
+                                        </p:dialog>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </p:fieldset>
+                    </h:form>
+                    
+                </p:tab>
+                <p:tab title="Gérer les activités"  >
+                    <table>
+                        <tr>
+                            <td>
+                                <i class="fa fa-cubes" style="color: #3dabb5;"></i>  
+                            </td>
+                            <td>
+                               <h:outputText  value="Gérer les activités" style="padding-left:320px;font-weight: bold;font-size: 25px;color: #b20707;"/> 
+                            </td>
+                        </tr>
+                    </table>
+                        <h:form>
+                        <p:growl id="growl2"  showDetail="true"/> 
+                        <p:fieldset legend="Ajouter une activité" style="font-weight: bold;margin-left:-13px" >                                                          
+                                <table>
+                                    <tr>                  
+                                        <td width="150" class="td">
+                                            <p:outputLabel value="Nom activité:" class="labels" for="nomA"/>
+                                        </td>
+                                        <td>
+                                            <p:inputText id="nomA" style="border-radius: 10px;padding-left: 10px;" value="#{gestionActiviteBean.activite.nomActivite}"/>
+                                            <p:keyFilter for="nomA" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                        </td> 
+                                        <td class="td" style="padding-left:45px;">
+                                          <p:outputLabel class="labels" for="filiale" value="Filiale :" />  
+                                        </td>
+                                        <td>
+                                            <p:selectOneMenu  id="filiale" class="filac" value="#{gestionActiviteBean.f}" required="true">
+                                                
+                                                <f:selectItems value="#{gestionActiviteBean.fs}" />                                                                                   
+                                            </p:selectOneMenu>
+                                        </td>
+
+                                        <td style="padding-left:35px;">
+                                            <p:commandButton value="Ajouter" update="growl2 books2" icon="ui-icon-check" style="background-color: #43ba14;" action="#{gestionActiviteBean.ajouter()}"/>
+                                        </td>
+                                        <td style="padding-left:35px;">
+                                            <p:commandButton value="Annuler" type="reset" icon="ui-icon-cancel"/>
+                                        </td>
+                                    </tr>
+                                </table>                                                                                                                                                  
+                        </p:fieldset>
+                        <p:fieldset legend="Consulter les activités" style="width:942px;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                <p:dataTable id="books2" value="#{gestionActiviteBean.activites}" var="a" emptyMessage="Aucune activité" draggableRows="true" resizableColumns="true">
+                                <p:column headerText="Nom activité">
+                                    <h:outputText value="#{a.nomActivite}" />
+                                </p:column>
+                                <p:column headerText="Nom filiale">
+                                    <h:outputText value="#{a.filiale.nomFiliale}" />
+                                </p:column>                                
+                                <p:column headerText="Modifier" >
+                                    <p:commandLink  onclick="PF('dlg4').show();" style="padding-left: 20px;">
+                                        <i class="fa fa-edit"/>
+                                        <p:growl id="growl13" sticky="true" showDetail="true" life="3000" />
+                                        <p:dialog header="Modifier Activité" widgetVar="dlg4" resizable="false" width="50%" height="50%">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <h:outputLabel for="na" value="Nom Activité:" />
+                                                    </td>
+                                                    <td>
+                                                        <p:inputText id="na" value="#{a.nomActivite}"  label="Nom Activité" />
+                                                    </td>   
+                                                </tr>
+                                                <tr>
+                                                    <td>  
+                                            <h:outputLabel for="fiil" value="Filiale:" />
+                                            </td>
+                                                    <td>
+                                            <p:selectOneMenu  id="fiil" class="filac" value="#{gestionActiviteBean.fl}">
+                                                
+                                                <f:selectItems value="#{gestionActiviteBean.fs}" />                                                                                   
+                                            </p:selectOneMenu>
+                                            </td>
+                                            </tr>
+                                                
+                                            </table>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Modifier"  update="growl13 books2" actionListener="#{gestionActiviteBean.modifierActivite(a)}" 
+                                                                 onclick="PF('dlg4').hide();" />
+                                            </f:facet>  
+                                        
+                                        </p:dialog>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </p:fieldset>
+                        </h:form>
+                    
+                </p:tab>
+                <p:tab title="Gérer les agences">
+                   <table>
+                        <tr>
+                            <td>
+                                <i class="fa fa-bank" style="color: #3dabb5;"></i>  
+                            </td>
+                            <td>
+                               <h:outputText  value="Gérer les agences" style="padding-left:320px;font-weight: bold;font-size: 25px;color: #b20707;"/> 
+                            </td>
+                        </tr>
+                    </table>
+                    <h:form>
+                        <p:growl id="growl3"  showDetail="true"/> 
+                        <p:fieldset legend="Ajouter une agence" style="margin-left:-13px;border:1px solid #d5d5d5;" >
+                              <table>
+                                        <tr>
+                                            <td width="150" class="td">
+                                                <p:outputLabel value="Nom agence:" class="labels" for="nomAg"/>
+                                            </td>
+                                            <td>
+                                                <p:inputText id="nomAg" value="#{gestionAgenceBean.agence.nom}" style="width: 160px;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="nomAg" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                            </td>
+                                            <td class="td">
+                                                <p:outputLabel value="Pays:" class="labels" for="paysAg"/>
+                                            </td>
+                                            <td >
+                                                <p:selectOneMenu id="paysAg" class="filac" value="#{gestionAgenceBean.pay}" style="width: 160px;">
+                                                    <p:ajax listener="#{gestionAgenceBean.onPaysChange}" update="villeAg ttAg" />
+                                                    <f:selectItem itemLabel="Choisir pays" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{gestionAgenceBean.pays}" />
+                                                </p:selectOneMenu>
+                                            </td>
+                                            <td class="td">
+                                                <p:outputLabel value="Ville:" class="labels" for="villeAg"/>
+                                            </td>
+                                            <td>
+                                                <p:selectOneMenu id="villeAg" class="filac" value="#{gestionAgenceBean.agence.ville}" style="width: 160px;">
+                                                    <f:selectItem itemLabel="Choisir ville" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{gestionAgenceBean.villes}" />
+                                                </p:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td">
+                                                <p:outputLabel value="Adresse:" class="labels" for="adresseAg"/>
+                                            </td>
+                                            <td>
+                                                <p:inputText  id="adresseAg" value="#{gestionAgenceBean.agence.adresse}" style="width: 160px;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="adresseAg" regEx="/[a-zA-Z0-9 ç ê ô û î â é è à]/i"/>
+                                            </td>
+                                            <td class="td">
+                                                <p:outputLabel value="Téléphone:" class="labels" for="telAg"/>
+                                                
+                                            </td>
+                                            <td>
+                                                <p:outputLabel id="ttAg" value="#{gestionAgenceBean.num}" class="labels" style="color: tomato"/>
+                                                <p:inputText id="telAg" value="#{gestionAgenceBean.agence.telephone}" title="Ex: 12345678" style="width: 122px;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="telAg" regEx="/[0-9]/i"/>
+                                                <p:tooltip id="toolTipFocusee" for="telAg" showEvent="focus" hideEvent="blur" position="top"/>
+                                            </td>
+                                   
+                                            <td class="td" >
+                                                <p:outputLabel value="Email:" class="labels" for="emailAg"/>
+                                            </td>
+                                            <td>
+                                                <p:inputText  id="emailAg" value="#{gestionAgenceBean.agence.email}" style="width: 160px;border-radius: 10px;padding-left: 10px;"/>
+                                                <p:keyFilter for="emailAg" mask="email"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <p:commandButton value="Ajouter" action="#{gestionAgenceBean.ajouter()}" update="books3 growl3" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                            <td style="padding-left:67px;">
+                                                <p:commandButton value="Annuler" type="reset" icon="ui-icon-cancel"/>
+                                            </td>
+                                        </tr>
+                                    </table>                                                                                              
+                        </p:fieldset>
+                        <p:fieldset legend="Consulter les agences" style="width:969px;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">
+                            <p:dataTable style="width:950px;" id="books3" value="#{gestionAgenceBean.agences}" var="a" emptyMessage="Aucune agence" draggableRows="true" resizableColumns="true">
+                                <p:column headerText="Nom agence" style="width: 80px;">
+                                    <h:outputText value="#{a.nom}" />
+                                </p:column>
+                                <p:column headerText="Pays" style="width: 75px;">
+                                    <h:outputText value="#{a.pays}" />
+                                </p:column>
+                                <p:column headerText="Ville" style="width: 60px;">
+                                    <h:outputText value="#{a.ville}" />
+                                </p:column>
+                                <p:column headerText="Adresse" style="width: 250px;">
+                                    <h:outputText value="#{a.adresse}" />
+                                </p:column>
+                                <p:column headerText="Téléphone" style="width: 85px;">
+                                    <h:outputText value="#{a.telephone}" />
+                                </p:column>
+                                <p:column headerText="Email" style="width: 170px;">
+                                    <h:outputText value="#{a.email}" />
+                                </p:column>
+                                <p:column headerText="Modifier" style="width: 50px;">
+                                    <p:commandLink  onclick="PF('dlg5').show();" style="padding-left: 20px;">
+                                        <i class="fa fa-edit"/>
+                                        <p:growl id="growl14" sticky="true" showDetail="true" life="3000" />
+                                        <p:dialog header="Modifier Agence
+                                                  " widgetVar="dlg5" resizable="false" width="50%" height="50%">
+                                        
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="nag" value="Nom Agence:" />
+                                                    </td>
+                                                    <td>
+                                                        <p:inputText id="nag" value="#{a.nom}"  label="Nom Agence" />
+                                            </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                  <td>  
+                                            <h:outputLabel for="paya" value="Pays:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="paya" value="#{a.pays}"  label="Pays" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="vila" value="Ville:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="vila" value="#{a.ville}"  label="Ville" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="ada" value="Adresse:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="ada" value="#{a.adresse}"  label="Adresse" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="tela" value="Télephone:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="tela" value="#{a.telephone}"  label="Télephone" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="ema" value="Email:" />
+                                            </td>
+                                                    <td>
+                                                        <p:inputText id="ema" value="#{a.email}"  label="Email" />
+                                            </td>
+                                                </tr>
+                                            </table>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Modifier"  update="growl14 books3" actionListener="#{gestionAgenceBean.modifierAgence(a)}" 
+                                                                 onclick="PF('dlg5').hide();"/>
+                                            </f:facet>  
+                                        
+                                        </p:dialog>
+                                    </p:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </p:fieldset>
+                    </h:form>
+                    
+                </p:tab>
+                <p:tab title="Gérer les utilisateurs">                  
+                    <table>
+                        <tr>
+                            <td>
+                                <i class="fa fa-users" style="color: #3dabb5;"></i>  
+                            </td>
+                            <td>
+                               <h:outputText  value="Gérer les utilisateurs" style="padding-left:320px;font-weight: bold;font-size: 25px;color: #b20707;"/> 
+                            </td>
+                        </tr>
+                    </table>
+                <p:tabView style="height:560px;border: transparent;" >
+                        
+                        <p:tab title="Ajouter un utilisateur">                           
+                            <h:form id="fo">
+                            <p:growl id="growl4"  showDetail="true"/>
+                            <h3 style="margin-top: -20px;margin-bottom: 1px;">Informations personnelles</h3>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-male"></i></span>
+                                                <p:inputText id="n" value="#{gestionUtilisateur.nom}" title="Uniquement des lettres" placeholder="Nom" />
+                                                <p:keyFilter for="n" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                                <p:tooltip id="toolTipFocus1" for="n" showEvent="focus" hideEvent="blur" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                               <tr>
+                                    <td>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-male"></i></span>
+                                                <p:inputText id="p" value="#{gestionUtilisateur.prenom}" title="Uniquement des lettres"  placeholder="Prénom" />
+                                                <p:keyFilter for="p" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                                <p:tooltip id="toolTipFocus2" for="p" showEvent="focus" hideEvent="blur" />
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-envelope-o"></i></span>
+                                                <p:inputText id="em" value="#{gestionUtilisateur.email}"  placeholder="Email" />      
+                                                <p:keyFilter for="em" mask="email"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-phone"></i></span>
+                                                <p:inputText id="tel" value="#{gestionUtilisateur.tel}"  placeholder="Num° Téléphone" />      
+                                                <p:keyFilter for="tel" mask="pint"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p:separator style="margin-top: -3px;margin-bottom: 15px;"/>
+                            <h3 style="margin-top: -20px;margin-bottom: 1px;">Informations d'authentification</h3>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
+                                                <p:inputText id="l" value="#{gestionUtilisateur.login}"  placeholder="Login" /> 
+                                                <p:keyFilter for="l" mask="email"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-unlock-alt"></i></span>
+                                                <p:password  validatorMessage="Confirmez le mot de passe!" value="#{gestionUtilisateur.mdp}" placeholder="Mot de passe" id="pw1" match="pw2" feedback="true" promptLabel="Très faible" weakLabel="Faible" goodLabel="Moyenne" strongLabel="Fort"/>      
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <span class="ui-inputgroup-addon"><i class="fa fa-unlock-alt"></i></span>
+                                                <p:password  value="#{gestionUtilisateur.mdp}" id="pw2" placeholder="Confirmez mot de passe!"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p:separator style="margin-top: -3px;margin-bottom: 15px;"/>
+                            <h3 style="margin-top: -20px;margin-bottom: 1px;">Poste</h3>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p:selectOneRadio id="console" onclick="f()" value="#{gestionUtilisateur.poste}" widgetVar="wid">
+                                            <f:selectItem itemLabel="Agent" itemValue="Agent"/>
+                                            <f:selectItem itemLabel="Vis-à-vis filiale" itemValue="Responsable filiale" />
+                                            <f:selectItem itemLabel="Opérationnel siège" itemValue="Siège" />
+                                            <p:ajax update="poste" />
+                                        </p:selectOneRadio>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-arrow-circle-right"/>
+                                        <p:outputLabel value=" #{gestionUtilisateur.poste}" id="poste" />
+                                    </td>
+                                </tr>
+                            
+                            </table>
+                            <p:dialog header="Ajouter un agent" widgetVar="dlg">
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h:outputLabel for="agen" value="Agence:" />
+                                    <p:selectOneMenu id="agen" class="filac" value="#{gestionUtilisateur.nomA}" >
+                                        <f:selectItem itemLabel="Choisir agence" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{gestionUtilisateur.ag}" />
+                                        
+                                    </p:selectOneMenu>           
+                                </h:panelGrid>
+                            </p:dialog>
+                            <p:dialog header="Ajouter un responsable filiale" widgetVar="dlg2">
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <h:outputLabel for="fil" value="Filiale:" />
+                                    <p:selectOneMenu id="fil" class="filac" value="#{gestionUtilisateur.nomF}">
+                                        <f:selectItem itemLabel="Choisir filiale" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{gestionUtilisateur.fs}" /> 
+                                        
+                                    </p:selectOneMenu>           
+                                </h:panelGrid>
+                            </p:dialog  >                        
+                            <p:separator style="margin-top: 15px;margin-bottom: 15px;"/>                           
+                            <table>
+                                <tr>
+                                    <td>
+                                        <p:commandButton value="Ajouter" update="growl4" action="#{gestionUtilisateur.ajouter()}"  icon="fa fa-user-plus" style="background-color: #43ba14;"/>
+                                    </td>
+                                    <td>
+                                        <p:commandButton value="Annuler" onclick="annuler()" type="reset" icon="ui-icon-cancel"/>
+                                    </td>
+                                </tr>                                
+                            </table>                                           
+                            </h:form>
+                        </p:tab>
+                        <p:tab title="Consulter les vis-à-vis agences">  
+                            <h:form>
+                                <p:dataTable id="books4" value="#{gestionUtilisateur.uas}" var="u" emptyMessage="Aucun agent" draggableRows="true" resizableColumns="true">
+                                    <p:column headerText="Nom" style="width: 90px;">
+                                        <h:outputText value="#{u.nom}" />
+                                    </p:column>
+                                    <p:column headerText="Prénom" style="width: 90px;">
+                                        <h:outputText value="#{u.prenom}" />
+                                    </p:column>
+                                    <p:column headerText="Email" style="width: 210px;">
+                                        <h:outputText value="#{u.email}" />
+                                    </p:column>
+                                    <p:column headerText="Téléphone" style="width: 90px;">
+                                        <h:outputText value="#{u.telephone}" />
+                                    </p:column>                                    
+                                    <p:column headerText="Nom agence" style="width: 160px;">
+                                        <h:outputText value="#{u.agence.nom}" />
+                                    </p:column>
+                                    <p:column headerText="Statut" style="width: 90px;">
+                                        <h:outputText value="#{u.statut}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Modifier" style="width: 60px;">
+                                         <p:commandLink  onclick="PF('dlg6').show();" style="padding-left: 20px;">
+                                        <i class="fa fa-edit"/>
+                                        <p:growl id="growl15" sticky="true" showDetail="true" life="3000" />
+                                        <p:dialog header="Modifier Agent" widgetVar="dlg6" resizable="false" width="50%" height="50%">
+                                        
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="nomag" value="Nom:" />
+                                                    </td>
+                                                    <td>
+                                                        <p:inputText id="nomag" value="#{u.nom}"  label="Nom" />
+                                            </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                  <td>  
+                                            <h:outputLabel for="preag" value="Prénom:" />
+                                            </td>
+                                                    <td>
+                                                        <p:inputText id="preag" value="#{u.prenom}"  label="Prénom" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="emag" value="Email:" />
+                                            </td>
+                                                    <td>
+                                                        <p:inputText id="emag" value="#{u.email}"  label="Email" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="agence22" value="Agence:" />
+                                            </td>
+                                                    <td>
+                                                        <p:selectOneMenu id="agence22" class="filac" value="#{gestionUtilisateur.ag1}" required="true" >
+                                                    
+                                                    <f:selectItem itemLabel="Choisir agence" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{gestionUtilisateur.ag}" />                                                                                   
+                                                </p:selectOneMenu>
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="tela" value="Télephone:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="tela" value="#{u.telephone}"  label="Télephone" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="stt" value="Statut:" />
+                                            </td>
+                                                    <td>
+                                                        
+                                                        <p:selectOneMenu id="stt" class="filac" value="#{u.statut}" >
+                                                        <f:selectItem itemLabel="Actif" itemValue="Actif" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Inactif" itemValue="Inactif" noSelectionOption="true" />
+                                                                                                                                       
+                                                </p:selectOneMenu>
+                                            </td>
+                                                </tr>
+                                            </table>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Modifier"  update="growl15 books4" actionListener="#{gestionUtilisateur.modifierAgent(u)}" 
+                                                                 onclick="PF('dlg6').hide();"/>
+                                            </f:facet>  
+                                        
+                                        </p:dialog>
+                                    </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </p:tab>
+                        <p:tab title="Consulter les vis-à-vis filiales">
+                            <h:form>
+                                <p:dataTable value="#{gestionUtilisateur.rms}" id="books5" var="u" emptyMessage="Aucun responsable" draggableRows="true" resizableColumns="true">
+                                    <p:column headerText="Nom" style="width: 90px;">
+                                        <h:outputText value="#{u.nom}" />
+                                    </p:column>
+                                    <p:column headerText="Prénom" style="width: 90px;">
+                                        <h:outputText value="#{u.prenom}" />
+                                    </p:column>
+                                    <p:column headerText="Email" style="width: 210px;">
+                                        <h:outputText value="#{u.email}" />
+                                    </p:column>   
+                                    <p:column headerText="Téléphone" style="width: 90px;">
+                                        <h:outputText value="#{u.telephone}" />
+                                    </p:column>
+                                    <p:column headerText="Nom filiale" style="width: 160px;">
+                                        <h:outputText value="#{u.filiale.nomFiliale}" />
+                                    </p:column>
+                                    <p:column headerText="Statut" style="width: 90px;">
+                                        <h:outputText value="#{u.statut}" />
+                                    </p:column>
+                                    <p:column headerText="Modifier" style="width: 60px;" >
+                                        <p:commandLink  onclick="PF('dlg7').show();" style="padding-left: 20px;">
+                                        <i class="fa fa-edit"/>
+                                        <p:growl id="growl16" sticky="true" showDetail="true" life="3000" />
+                                        <p:dialog header="Modifier responsable filiale" widgetVar="dlg7" resizable="false" width="50%" height="50%">
+                                        
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="nomrp" value="Nom:" />
+                                                    </td>
+                                                    <td>
+                                                        <p:inputText id="nomrp" value="#{u.nom}"  label="Nom" />
+                                            </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                  <td>  
+                                            <h:outputLabel for="prerp" value="Prénom:" />
+                                            </td>
+                                                    <td>
+                                                        <p:inputText id="prerp" value="#{u.prenom}"  label="Prénom" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="emrp" value="Email:" />
+                                            </td>
+                                                    <td>
+                                                        <p:inputText id="emrp" value="#{u.email}"  label="Email" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="filia22" value="Filiale:" />
+                                            </td>
+                                                    <td>
+                                                        <p:selectOneMenu id="filia22" class="filac" value="#{gestionUtilisateur.fll}">
+                                                    
+                                                    <f:selectItem itemLabel="Choisir filiale" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{gestionUtilisateur.fs}" />                                                                                   
+                                                </p:selectOneMenu>
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="telrp" value="Télephone:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="telrp" value="#{u.telephone}"  label="Télephone" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="sttrp" value="Statut:" />
+                                            </td>
+                                                    <td>
+                                                        
+                                                        <p:selectOneMenu id="sttrp" class="filac" value="#{u.statut}" >
+                                                        <f:selectItem itemLabel="Actif" itemValue="Actif" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Inactif" itemValue="Inactif" noSelectionOption="true" />
+                                                                                                                                       
+                                                </p:selectOneMenu>
+                                            </td>
+                                                </tr>
+                                            </table>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Modifier"  update="growl16 books5" actionListener="#{gestionUtilisateur.modifierResponsable(u)}" 
+                                                                 onclick="PF('dlg7').hide();"/>
+                                            </f:facet>  
+                                        
+                                        </p:dialog>
+                                    </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </p:tab>
+                        <p:tab title="Consulter les opérationnels de siège">
+                            <h:form>
+                                <p:dataTable value="#{gestionUtilisateur.oms}" id="books6" var="u" emptyMessage="Aucun opérationnel siège" draggableRows="true" resizableColumns="true">
+                                    <p:column headerText="Nom" style="width: 90px;">
+                                        <h:outputText value="#{u.nom}" />
+                                    </p:column>
+                                    <p:column headerText="Prénom" style="width: 90px;">
+                                        <h:outputText value="#{u.prenom}" />
+                                    </p:column>
+                                    <p:column headerText="Email" style="width: 210px;">
+                                        <h:outputText value="#{u.email}" />
+                                    </p:column>     
+                                    <p:column headerText="Téléphone" style="width: 60px;">
+                                        <h:outputText value="#{u.telephone}" />
+                                    </p:column>
+                                    <p:column headerText="Statut" style="width: 80px;">
+                                        <h:outputText value="#{u.statut}" />
+                                    </p:column>
+                                    <p:column headerText="Modifier" style="width: 60px;">
+                                        <p:commandLink  onclick="PF('dlg8').show();" style="padding-left: 20px;">
+                                        <i class="fa fa-edit"/>
+                                        <p:growl id="growl17" sticky="true" showDetail="true" life="3000" />
+                                        <p:dialog header="Modifier opérationnel de siège" widgetVar="dlg8" resizable="false" width="50%" height="50%">
+                                        
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="nomop" value="Nom:" />
+                                                    </td>
+                                                    <td>
+                                                        <p:inputText id="nomop" value="#{u.nom}"  label="Nom" />
+                                            </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                  <td>  
+                                            <h:outputLabel for="preop" value="Prénom:" />
+                                            </td>
+                                                    <td>
+                                                        <p:inputText id="preop" value="#{u.prenom}"  label="Prénom" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="emop" value="Email:" />
+                                            </td>
+                                                    <td>
+                                                        <p:inputText id="emop" value="#{u.email}"  label="Email" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="telop" value="Télephone:" />
+                                            </td>
+                                                    <td>
+                                            <p:inputText id="telop" value="#{u.telephone}"  label="Télephone" />
+                                            </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>
+                                            <h:outputLabel for="sttop" value="Statut:" />
+                                            </td>
+                                                    <td>
+                                                        
+                                                        <p:selectOneMenu id="sttop" class="filac" value="#{u.statut}" >
+                                                        <f:selectItem itemLabel="Actif" itemValue="Actif" noSelectionOption="true" />
+                                                        <f:selectItem itemLabel="Inactif" itemValue="Inactif" noSelectionOption="true" />
+                                                                                                                                       
+                                                </p:selectOneMenu>
+                                            </td>
+                                                </tr>
+                                            </table>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Modifier"  update="growl17 books6" actionListener="#{gestionUtilisateur.modifierOperationnel(u)}" 
+                                                                 onclick="PF('dlg8').hide();"/>
+                                            </f:facet>  
+                                        
+                                        </p:dialog>
+                                    </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </p:tab>
+                    </p:tabView>          
+                </p:tab>
+            
+                <p:tab title="Paramétrer le système"> 
+                    <table>
+                        <tr>
+                            <td>
+                                <i class="fa fa-cogs" style="color: #3dabb5;"></i>  
+                            </td>
+                            <td>
+                               <h:outputText  value="Paramétrer le système" style="padding-left:320px;font-weight: bold;font-size: 25px;color: #b20707;"/> 
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <p:tabView style="height:100%;border: transparent;width: 100%; position: relative;">
+                        
+                        <p:tab title="Paramétrer les affectations" class="parmAff">
+                            <h:form>
+                            <p:growl id="growl2" showDetail="true"/>                       
+                            <p:fieldset legend="Affecter les activités aux utilisateurs" style="font-weight: bold;margin-left:-13px" >                                                          
+                                    <table>
+                                        <tr>                                                               
+                                            <td class="td" width="160">
+                                              <p:outputLabel class="labels" for="filiale" value="Filiale :" />  
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="filiale" class="filac" value="#{parametrerBean.fil}">
+                                                    <p:ajax listener="#{parametrerBean.onFilialeChange}" update="activite77" />
+                                                    <p:ajax listener="#{parametrerBean.onFiliale2Change}" update="respo" />
+                                                    <f:selectItem itemLabel="Choisir filiale" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.fils}" />                             
+                                                </p:selectOneMenu>                                 
+                                            </td>
+                                            <td width="150" class="td" style="padding-left:45px;">
+                                                <p:outputLabel value="Activité:" class="labels" for="activite77"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="activite77" class="filac" value="#{parametrerBean.act}">
+                                                    <f:selectItem itemLabel="Choisir activité" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.acts}" />
+                                                </p:selectOneMenu>
+                                            </td>
+                                            <td width="150" class="td" style="padding-left:45px;">
+                                                <p:outputLabel value="Questionnaire:" class="labels" for="activite17"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="activite17" class="filac" value="#{parametrerBean.qu}">
+                                                    <f:selectItem itemLabel="Choisir Questionnaire" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.questionna}" />
+                                                </p:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                    </table>  
+                                <p:separator style="margin-top: 2px;margin-bottom: 2px;"/>
+                                <h3 style="color: palevioletred">Agent de saisie</h3>
+                                <table>
+                                        <tr>                                                               
+                                            <td class="td" width="160">
+                                              <p:outputLabel class="labels" for="agence" value="Agence :" />  
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="agence" class="filac" value="#{parametrerBean.ag}" >
+                                                    <p:ajax listener="#{parametrerBean.onAgenceChange}" update="agent" />
+                                                    <f:selectItem itemLabel="Choisir agence" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.ags}" />                                                                                   
+                                                </p:selectOneMenu>
+                                            </td>
+                                            <td width="150" style="padding-left:28px;">
+                                                <p:outputLabel value="Agent:" class="labels" for="agent"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="agent" class="filac" value="#{parametrerBean.agt}">
+                                                    <f:selectItem itemLabel="Choisir agent" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.agts}" />                                                                                   
+                                                </p:selectOneMenu>
+                                            </td>   
+                                            <td width="150" style="padding-left:28px;">
+                                                <p:outputLabel value="Plateforme:" class="labels" for="plate"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="plate" class="filac" value="#{parametrerBean.plat}">
+                                                    <f:selectItem itemLabel="Choisir plateforme" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.plats}" />                                                                                   
+                                                </p:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                <p:separator style="margin-top: 2px;margin-bottom: 2px;"/>
+                                <h3 style="color: palevioletred">Vis-à-vis filiale de validation</h3>
+                                <table >
+                                        <tr>
+                                            <td width="150" class="td">
+                                                <p:outputLabel value="Responsable : " class="labels" for="respo"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="respo" class="filac" value="#{parametrerBean.res}">
+                                                    <f:selectItem itemLabel="Choisir responsable" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.respos}" />                                                                                   
+                                                </p:selectOneMenu>
+                                            </td>                                 
+                                        </tr>
+                                    </table>
+                                <p:separator style="margin-top: 2px;margin-bottom: 2px;"/>
+                                <h3 style="color: palevioletred">Qui consultent cette activité ?</h3>
+                                <table >
+                                        <tr>
+                                            <td width="250" class="td">
+                                                <p:outputLabel value="Opérationnel marketing : " class="labels" for="op"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectCheckboxMenu id="op" value="#{parametrerBean.nomsSelected}" label="Opérationnels" multiple="true"
+                                                                    filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+                                                    <f:selectItems value="#{parametrerBean.nomsOps}" />
+                                                </p:selectCheckboxMenu>
+                                            </td>                                 
+                                        </tr>
+                                    </table>
+                                <p:separator/>
+                                <p:commandButton value="Ajouter" action="#{parametrerBean.ajouterAffectation()}"  icon="ui-icon-check" style="background-color: #43ba14;margin-left: 840px;"/>
+                            </p:fieldset>
+                            
+                            </h:form>
+                        </p:tab>
+                        <p:tab title="Consulter les affectations">
+                            <h:form style="height: 100%;width: 100%;">
+                            <p:fieldset legend="Consulter les affectations" style="width:80%;margin-top: 10px;margin-left:5%;border:1px solid #d5d5d5;">                            
+                                    <p:dataTable value="#{parametrerBean.affs}" style="height: 60%;" var="a" id="affec" emptyMessage="Aucune affectation" draggableRows="true" resizableColumns="true">
+                                        <p:column headerText="Agent" style="width: 25%;">
+                                            <h:outputText value="#{a.agent.nom} #{a.agent.prenom}" />
+                                    </p:column>                                   
+                                    <p:column headerText="Filiale-Activité" style="width: 20%;">
+                                        <h:outputText value="#{a.activite.filiale.nomFiliale} #{a.activite.nomActivite}" />
+                                    </p:column>  
+                                    <p:column headerText="Responsable" style="width: 20%;">
+                                        <h:outputText value="#{a.responsable.nom} #{a.responsable.prenom}" />
+                                    </p:column>
+                                    <p:column headerText="Questionnaire" style="width: 20%;">
+                                        <h:outputText value="#{a.questionnaireAffectation.nomQuestionnaire} " />
+                                    </p:column> 
+                                    <p:column headerText="Date affectation" style="width: 25%;">
+                                        <h:outputText value="#{a.dateAffectation}" >
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Modifier" style="width: 15%" >
+                                        <p:commandLink style="padding-left: 25px;">
+                                            <i class="fa fa-edit"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:fieldset>
+                            </h:form>
+                        </p:tab>
+                        <p:tab title="Paramétrer les indicateurs">
+                            
+                            <p:accordionPanel cache="false" id="accP">
+                                
+                                <p:tab title="Ajouter une nouvelle question" titleStyle="border-radius:16px;" id="quest">                                    
+                                    <h:form>                                        
+                                    <p:growl id="growl25" showDetail="true"/> 
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <p:outputLabel class="labels" for="borneMin" value="Nom Question :" />  
+                                            </td>
+                                            <td>
+                                                <p:inputText id="borneMin" value="#{parametrerBean.nomQuestion}" style="width: 160px;border-radius: 10px;"/>      
+                                                <p:keyFilter for="borneMin" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                            </td>                                       
+                                            <td>
+                                                <p:outputLabel class="labels"  value="Type Question :" />  
+                                            </td>
+                                            <td>
+                                                <p:selectOneMenu id="console" value="#{parametrerBean.typeQuestion}" style="width:125px">
+                                                    <f:selectItem itemLabel="Choisir type" itemValue="" />
+                                                    <f:selectItem itemLabel="Nombre" itemValue="Nombre" />
+                                                    <f:selectItem itemLabel="Text" itemValue="Text" />
+                                                    <f:selectItem itemLabel="Liste" itemValue="Liste" />
+                                                    <f:selectItem itemLabel="Image" itemValue="Image" />
+                                                </p:selectOneMenu>
+                                            </td>
+                                            <td>
+                                                <p:commandButton value="Ajouter" action="#{parametrerBean.ajoutQuestion()}" update="growl25 boot "  process="@parent" icon="ui-icon-check" style="background-color: #43ba14;" onkeyup="#{parametrerBean.onChange()}" >
+                                                
+                                                </p:commandButton>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p:fieldset legend="Consulter les questions" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                        <p:dataTable style="height: 80%;width: 100%;" value="#{parametrerBean.questions}" var="t" id="boot" emptyMessage="Aucune question." draggableRows="true" resizableColumns="true">
+                                            <p:column headerText="Num°">
+                                                <h:outputText value="#{parametrerBean.questions.indexOf(t)+1}" style="padding-left: 50%;"/>
+                                            </p:column>
+                                            <p:column headerText="Nom Question">
+                                                <h:outputText value="#{t.nomQuestion}" style="padding-left: 5%;"/>
+                                            </p:column>
+                                            <p:column headerText="Type Question">
+                                                <h:outputText value="#{t.typeQuestion}" style="padding-left: 40%;"/>
+                                            </p:column>                                            
+                                            <p:column headerText="Modifier" >
+                                                <p:commandLink style="padding-left: 50%;">
+                                                    <i class="fa fa-edit"/>
+                                                </p:commandLink>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                    </h:form>
+                                </p:tab>
+                                <p:tab title="Ajouter réponse d'une question" titleStyle="border-radius:16px;" id="fl" >
+                                    
+                                    <h:form id="respForm">
+                                        
+                                        
+                                    <p:growl id="growl26" showDetail="true"/> 
+                                    
+                                    <table id="tabRep">
+                                        <tr>
+                                            <td>
+                                                <p:outputLabel class="labels"  value="Question :" />  
+                                            </td>
+                                            <td>
+                                                <p:selectOneMenu id="question" value="#{parametrerBean.ques}" style="width:100%">
+                                                    <f:selectItem itemLabel="Choisir question" />
+                                                    <f:selectItems value="#{parametrerBean.quest}" />
+                                                </p:selectOneMenu>
+                                            </td>                                      
+                                            <td style="padding-left: 5%;">
+                                                <p:outputLabel class="labels" for="ValeurReponse" value="Valeur Réponse :" style="width: 100%" />  
+                                            </td>
+                                            <td style="padding-left: 5%;">
+                                                <p:inputText id="ValeurReponse" value="#{parametrerBean.valeurReponse}" style="width: 80%;border-radius: 10px;"/>      
+                                                <p:keyFilter for="ValeurReponse" regEx="/[a-zA-Z ç ê ô û î â é è à- 0-9]/i"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table>
+                                        <tr>    
+                                            <td>
+                                                <p:outputLabel class="labels"  value="Réponse cible :" />  
+                                            </td>
+                                            <td>
+                                                <p:selectOneMenu id="console" value="#{parametrerBean.reponseCible}" style="width:140px">
+                                                    <f:selectItem itemLabel="Choisir cible"/>
+                                                    <f:selectItem itemLabel="False" itemValue="false" />
+                                                    <f:selectItem itemLabel="True" itemValue="true" />
+                                                    
+                                                </p:selectOneMenu>
+                                            </td>
+                                            
+                                            
+                                            <td>
+                                                <p:commandButton value="Ajouter"  action="#{parametrerBean.ajoutReponse()}" update="growl26 boot6" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                            
+                                        </tr>
+                                    </table>
+                                    <p:fieldset legend="Consulter les réponses" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                        <p:dataTable style="height: 80%;width: 100%" value="#{parametrerBean.reponses}" var="r" id="boot6" emptyMessage="Aucun réponse." draggableRows="true" resizableColumns="true">
+                                            <p:column headerText="Nom Question">
+                                                <h:outputText value="#{r.questionReponse.nomQuestion}" style="padding-left: 5%;"/>
+                                            </p:column>
+                                            <p:column headerText="Valeur réponse">
+                                                <h:outputText value="#{r.valeurReponse}" style="padding-left: 5%;"/>
+                                            </p:column>                                            
+                                            <p:column headerText="Modifier" >
+                                                <p:commandLink style="padding-left: 50%;">
+                                                    <i class="fa fa-edit"/>
+                                                </p:commandLink>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                    </h:form>
+                                </p:tab>
+                                <p:tab title="Ajouter un groupement" titleStyle="border-radius:16px;">
+                                    <h:form>
+                                        <p:growl id="growl88" showDetail="true"/>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <p:outputLabel class="labels" for="nomGroupement" value="Nom Groupement :" /> 
+                                                </td>
+                                                <td>
+                                                    <p:inputText id="nomGroupement" value="#{parametrerBean.nomGroupement}" style="width: 140px;border-radius: 10px;"/>      
+                                                    <p:keyFilter for="nomGroupement" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                                </td>
+                                                
+                                                <td>
+                                                    <p:commandButton value="Ajouter" action="#{parametrerBean.ajoutGroupement()}" update="growl88 boot68" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                                </td>
+                                            </tr>      
+                                        </table>
+                                        <p:fieldset legend="Consulter les groupements" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                            <p:dataTable style="height: 80%;width: 100%;" value="#{parametrerBean.groupements}" var="g" id="boot68" emptyMessage="Aucune cible." draggableRows="true" resizableColumns="true">
+                                                    <p:column headerText="Num°">
+                                                        <h:outputText value="#{parametrerBean.groupements.indexOf(g)+1}" style="padding-left: 50%;"/>
+                                                    </p:column>
+                                                    <p:column headerText="Nom Groupement">
+                                                        <h:outputText value="#{g.nomGroupement}" style="padding-left: 5%;"/>
+                                                    </p:column>                                            
+                                                    <p:column headerText="Modifier" >
+                                                        <p:commandLink style="padding-left: 50%;">
+                                                            <i class="fa fa-edit"/>
+                                                        </p:commandLink>
+                                                    </p:column>
+                                                </p:dataTable>
+                                        </p:fieldset>
+                                    </h:form>
+                                </p:tab>
+                                
+                                
+                                <p:tab title="Gestion du groupement" titleStyle="border-radius:16px;" id="f2">
+                                    <h:form>
+                                    <p:growl id="growll2" showDetail="true"/> 
+                                    <table>
+                                        <tr>                                                               
+                                            <td class="td" width="160">
+                                              <p:outputLabel class="labels" for="groupement" value="Groupement :" />  
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="groupement" class="filac" value="#{parametrerBean.grou}">
+                                                    <p:ajax listener="#{parametrerBean.onFilialeChange}" update="activite77" />                                                    
+                                                    <f:selectItem itemLabel="Choisir groupement" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.group}"  />                             
+                                                </p:selectOneMenu>                                 
+                                            </td>
+                                            <td>
+                                                <p:commandButton value="Consulter" action="#{parametrerBean.consulterGroupement()}" update="growll2 boot11" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="150" class="td" >
+                                                <p:outputLabel value="Question:" class="labels" for="activite77"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="activite77" class="filac" value="#{parametrerBean.ques}">
+                                                    <f:selectItem itemLabel="Choisir question" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.quest}" />
+                                                </p:selectOneMenu>
+                                            </td>
+                                            <td width="150" class="td" style="padding-left:45px;">
+                                                <p:outputLabel value="Question ciblée:" class="labels" for="activite75"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="activite75" value="#{parametrerBean.cib}" style="width:140px">
+                                                    <f:selectItem itemLabel="Choisir cible"/>
+                                                    <f:selectItem itemLabel="False" itemValue="false" />
+                                                    <f:selectItem itemLabel="True" itemValue="true" />
+                                                    
+                                                </p:selectOneMenu>
+                                            </td>
+                                            <td>
+                                                <p:commandButton value="Ajouter" action="#{parametrerBean.gererGroupement()}" update="growll2 boot11" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p:fieldset legend="Consulter les questions par groupement" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                        <p:dataTable style="height: 80%;width: 100%" value="#{parametrerBean.ltqg}" var="c" id="boot11" emptyMessage="Aucun concurrent." draggableRows="true" resizableColumns="true">
+                                            <p:column headerText="Groupement">
+                                                <h:outputText value="#{c.groupement.nomGroupement}" style="padding-left: 5%;"/>
+                                            </p:column>
+                                            <p:column headerText="Question">
+                                                <h:outputText value="#{c.question.nomQuestion}" style="padding-left: 5%;"/>
+                                            </p:column>
+                                                                                                                                    
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                    </h:form>
+                                </p:tab>
+                                
+                                <p:tab title="Ajouter un questionnaire" titleStyle="border-radius:16px;">
+                                    <h:form>
+                                        <p:growl id="growl89" showDetail="true"/>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <p:outputLabel class="labels" for="nomQuestionnaire" value="Nom Questionnaire :" /> 
+                                                </td>
+                                                <td>
+                                                    <p:inputText id="nomQuestionnaire" value="#{parametrerBean.nomQuestionnaire}" style="width: 140px;border-radius: 10px;"/>      
+                                                    <p:keyFilter for="nomQuestionnaire" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                                </td>                                                
+                                                <td>
+                                                    <p:commandButton value="Ajouter" action="#{parametrerBean.ajoutQuestionnaire()}" update="growl89 boot98" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <p:fieldset legend="Consulter les questionnaires" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                            <p:dataTable style="height: 80%;width: 100%" value="#{parametrerBean.questionnaires}" var="q" id="boot98" emptyMessage="Aucune cible." draggableRows="true" resizableColumns="true">
+                                                    <p:column headerText="Num°">
+                                                        <h:outputText value="#{parametrerBean.questionnaires.indexOf(q)+1}" style="padding-left: 50%;"/>
+                                                    </p:column>
+                                                    <p:column headerText="Nom Questionnaire">
+                                                        <h:outputText value="#{q.nomQuestionnaire}" style="padding-left: 5%;"/>
+                                                    </p:column>                                            
+                                                    <p:column headerText="Modifier" >
+                                                        <p:commandLink style="padding-left: 50%;">
+                                                            <i class="fa fa-edit"/>
+                                                        </p:commandLink>
+                                                    </p:column>
+                                                </p:dataTable>
+                                        </p:fieldset>
+                                    </h:form>
+                                </p:tab>
+                                
+                                
+                                <p:tab title="Gestion du questionnaire" titleStyle="border-radius:16px;">
+                                    <h:form>
+                                    <p:growl id="growl22" showDetail="true"/> 
+                                    <table>
+                                        <tr>                                                               
+                                            <td class="td" width="160">
+                                              <p:outputLabel class="labels" value="Questionnaire :" />  
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="groupement" class="filac" value="#{parametrerBean.qu}">
+                                                    <p:ajax listener="#{parametrerBean.onFilialeChange}" update="activite77" />                                                    
+                                                    <f:selectItem itemLabel="Choisir questionnaire" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.questionna}" />                             
+                                                </p:selectOneMenu>                                 
+                                            </td>
+                                            <td width="150" class="td" style="padding-left:45px;">
+                                                <p:outputLabel value="Groupement" class="labels" for="activite77"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="activite77" class="filac" value="#{parametrerBean.grou}">
+                                                    <f:selectItem itemLabel="Choisir groupement" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.group}" />
+                                                </p:selectOneMenu>
+                                            </td>                                 
+                                            <td>
+                                                <p:commandButton value="Ajouter" action="#{parametrerBean.gererQuestionnaire()}" update="growl22 boot21" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                            <td>
+                                                <p:commandButton value="Consulter" action="#{parametrerBean.consulterQuestionnaire()}" update="growl22 boot21" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p:fieldset legend="Consulter les groupements par questionnaire" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                        <p:dataTable style="height: 80%;width: 100%" value="#{parametrerBean.quesGrou}" var="c" id="boot21" emptyMessage="Aucun questionnaire affecté." draggableRows="true" resizableColumns="true">
+                                            <p:column headerText="Questionnaire">
+                                                <h:outputText value="#{c.questionnaire.nomQuestionnaire}" style="padding-left: 5%;"/>
+                                            </p:column>
+                                            <p:column headerText="Groupement">
+                                                <h:outputText value="#{c.groupementQuestionnaire.nomGroupement}" style="padding-left: 5%;"/>
+                                            </p:column>
+                                                                                                                                    
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                    </h:form>
+                                </p:tab>
+                                
+                                <p:tab title="Ajouter les concurrents par activité" titleStyle="border-radius:16px;">
+                                    <h:form>
+                                    <p:growl id="growlll" showDetail="true"/> 
+                                    <table>
+                                        <tr>                                                               
+                                            <td class="td" width="160">
+                                              <p:outputLabel class="labels" for="filiale" value="Filiale :" />  
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="filiale" class="filac" value="#{parametrerBean.fil}">
+                                                    <p:ajax listener="#{parametrerBean.onFilialeChange}" update="activite77" />                                                    
+                                                    <f:selectItem itemLabel="Choisir filiale" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.fils}" />                             
+                                                </p:selectOneMenu>                                 
+                                            </td>
+                                            <td width="150" class="td" style="padding-left:45px;">
+                                                <p:outputLabel value="Activité:" class="labels" for="activite77"/>
+                                            </td>
+                                            <td style="padding-top: 5px;">
+                                                <p:selectOneMenu id="activite77" class="filac" value="#{parametrerBean.actC}">
+                                                    <f:selectItem itemLabel="Choisir activité" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{parametrerBean.acts}" />
+                                                </p:selectOneMenu>
+                                            </td>                                 
+                                        </tr>
+                                    </table>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <p:outputLabel class="labels" for="concurrent" value="Nom concurrent :" />  
+                                            </td>
+                                            <td>
+                                                <p:inputText id="concurrent" value="#{parametrerBean.concurrent}" style="width: 160px;border-radius: 10px;"/>      
+                                                <p:keyFilter for="concurrent" regEx="/[a-zA-Z ç ê ô û î â é è à]/i"/>
+                                            </td>
+                                            <td>
+                                                <p:commandButton value="Ajouter" action="#{parametrerBean.ajoutConcurrent()}" update="growlll boot7" icon="ui-icon-check" style="background-color: #43ba14;"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p:fieldset legend="Consulter les concurrents par activité" style="width:80%;margin-top: 10px;margin-left:-13px;border:1px solid #d5d5d5;">                            
+                                        <p:dataTable style="height: 80%;width: 100%" value="#{parametrerBean.cpas}" var="c" id="boot7" emptyMessage="Aucun concurrent." draggableRows="true" resizableColumns="true">
+                                            <p:column headerText="Filiale">
+                                                <h:outputText value="#{c.activite.filiale.nomFiliale}" style="padding-left: 75px;"/>
+                                            </p:column>
+                                            <p:column headerText="Activité">
+                                                <h:outputText value="#{c.activite.nomActivite}" style="padding-left: 75px;"/>
+                                            </p:column>
+                                            <p:column headerText="Activité concurrente">
+                                                <h:outputText value="#{c.activiteConcurrent.nom}" style="padding-left: 75px;"/>
+                                            </p:column>                                                                                        
+                                        </p:dataTable>
+                                    </p:fieldset>
+                                    </h:form>
+                                </p:tab>
+                            </p:accordionPanel>
+                        </p:tab>
+                        
+                    </p:tabView>
+                </p:tab>           
+            </p:tabView>
+     <ui:include src="../footer.xhtml"/>  
+    </h:body>
+    <style type="text/css">
+        @font-face{font-family:'latoregular';src:url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-regular-webfont.eot.xhtml?ln=primefaces-omega");src:url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-regular-webfont.eot.xhtml?ln=primefaces-omega#iefix") format('embedded-opentype'),url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-regular-webfont.woff.xhtml?ln=primefaces-omega") format('woff'),url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-regular-webfont.ttf.xhtml?ln=primefaces-omega") format('truetype'),url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-regular-webfont.svg.xhtml?ln=primefaces-omega#latoregular") format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'latobold';src:url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-bold-webfont.eot.xhtml?ln=primefaces-omega");src:local('Lato Bold'),local('Lato-Bold'),url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-bold-webfont.eot.xhtml?ln=primefaces-omega#iefix") format('embedded-opentype'),url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-bold-webfont.woff.xhtml?ln=primefaces-omega") format('woff'),url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-bold-webfont.ttf.xhtml?ln=primefaces-omega") format('truetype'),url("https://www.primefaces.org/showcase/javax.faces.resource/fonts/lato-bold-webfont.svg.xhtml?ln=primefaces-omega#latobold") format('svg');font-weight:700;font-style:normal}.ui-widget{font-family:"latoregular","Trebuchet MS",Arial,Helvetica,sans-serif;font-size:1em;font-size:1em;}.ui-widget .ui-widget{font-size:1em}.ui-widget-content{border:1px solid #d5d5d5;background:#fff;color:#222}.ui-widget-content a{color:#222}.ui-widget-header{border:1px solid #d5d5d5;background:#ccc;color:#222;font-weight:bold}.ui-widget-header{border:1px solid #d9d9d9;color:#1b1d1f;background:#f6f7f9 0 0 repeat-x;background:-moz-linear-gradient(top,#f6f7f9 0,#ebedf0 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#f6f7f9),color-stop(100%,#ebedf0));background:-webkit-linear-gradient(top,#f6f7f9 0,#ebedf0 100%);background:-o-linear-gradient(top,#f6f7f9 0,#ebedf0 100%);background:-ms-linear-gradient(top,#f6f7f9 0,#ebedf0 100%);background:linear-gradient(top,#f6f7f9 0,#ebedf0 100%)}.ui-widget-header a{color:#222}.ui-state-default,.ui-widget-content .ui-state-default,.ui-widget-header .ui-state-default{border:1px solid #d6d6d6;background:#fff;font-weight:normal;color:#555}.ui-state-default a,.ui-state-default a:link,.ui-state-default a:visited{color:#555;text-decoration:none}.ui-state-hover,.ui-widget-content .ui-state-hover,.ui-widget-header .ui-state-hover,.ui-state-focus,.ui-widget-content .ui-state-focus,.ui-widget-header .ui-state-focus{border:1px solid #c0c0c0;background:#eee;font-weight:normal;color:#212121}.ui-state-hover a,.ui-state-hover a:hover{color:#212121;text-decoration:none}.ui-state-active,.ui-widget-content .ui-state-active,.ui-widget-header .ui-state-active{border:1px solid #bebebe;background:#d6d6d6;font-weight:normal;color:#212121}.ui-state-active a,.ui-state-active a:link,.ui-state-active a:visited{color:#212121;text-decoration:none}.ui-widget :active{outline:0}.ui-state-highlight,.ui-widget-content .ui-state-highlight,.ui-widget-header .ui-state-highlight{border:1px solid #156090;background:#186ba0;color:#fff}.ui-state-highlight a,.ui-widget-content .ui-state-highlight a,.ui-widget-header .ui-state-highlight a{color:#363636}.ui-state-error,.ui-widget-content .ui-state-error,.ui-widget-header .ui-state-error{border-left:2px solid #ef5350}.ui-priority-primary,.ui-widget-content .ui-priority-primary,.ui-widget-header .ui-priority-primary{font-weight:bold}.ui-priority-secondary,.ui-widget-content .ui-priority-secondary,.ui-widget-header .ui-priority-secondary{opacity:.7;filter:Alpha(Opacity=70);font-weight:normal}.ui-state-disabled,.ui-widget-content .ui-state-disabled,.ui-widget-header .ui-state-disabled{opacity:.35;filter:Alpha(Opacity=35);background-image:none}.ui-icon{width:16px;height:16px;background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_222222_256x240.png.xhtml?ln=primefaces-omega")}.ui-widget-content .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_222222_256x240.png.xhtml?ln=primefaces-omega")}.ui-widget-header .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_222222_256x240.png.xhtml?ln=primefaces-omega")}.ui-state-default .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_454545_256x240.png.xhtml?ln=primefaces-omega")}.ui-state-hover .ui-icon,.ui-state-focus .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_454545_256x240.png.xhtml?ln=primefaces-omega")}.ui-state-active .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_454545_256x240.png.xhtml?ln=primefaces-omega")}.ui-state-highlight .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-state-error .ui-icon,.ui-state-error-text .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_cd0a0a_256x240.png.xhtml?ln=primefaces-omega")}.ui-icon-carat-1-n{background-position:0 0}.ui-icon-carat-1-ne{background-position:-16px 0}.ui-icon-carat-1-e{background-position:-32px 0}.ui-icon-carat-1-se{background-position:-48px 0}.ui-icon-carat-1-s{background-position:-64px 0}.ui-icon-carat-1-sw{background-position:-80px 0}.ui-icon-carat-1-w{background-position:-96px 0}.ui-icon-carat-1-nw{background-position:-112px 0}.ui-icon-carat-2-n-s{background-position:-128px 0}.ui-icon-carat-2-e-w{background-position:-144px 0}.ui-icon-triangle-1-n{background-position:0 -16px}.ui-icon-triangle-1-ne{background-position:-16px -16px}.ui-icon-triangle-1-e{background-position:-32px -16px}.ui-icon-triangle-1-se{background-position:-48px -16px}.ui-icon-triangle-1-s{background-position:-64px -16px}.ui-icon-triangle-1-sw{background-position:-80px -16px}.ui-icon-triangle-1-w{background-position:-96px -16px}.ui-icon-triangle-1-nw{background-position:-112px -16px}.ui-icon-triangle-2-n-s{background-position:-128px -16px}.ui-icon-triangle-2-e-w{background-position:-144px -16px}.ui-icon-arrow-1-n{background-position:0 -32px}.ui-icon-arrow-1-ne{background-position:-16px -32px}.ui-icon-arrow-1-e{background-position:-32px -32px}.ui-icon-arrow-1-se{background-position:-48px -32px}.ui-icon-arrow-1-s{background-position:-64px -32px}.ui-icon-arrow-1-sw{background-position:-80px -32px}.ui-icon-arrow-1-w{background-position:-96px -32px}.ui-icon-arrow-1-nw{background-position:-112px -32px}.ui-icon-arrow-2-n-s{background-position:-128px -32px}.ui-icon-arrow-2-ne-sw{background-position:-144px -32px}.ui-icon-arrow-2-e-w{background-position:-160px -32px}.ui-icon-arrow-2-se-nw{background-position:-176px -32px}.ui-icon-arrowstop-1-n{background-position:-192px -32px}.ui-icon-arrowstop-1-e{background-position:-208px -32px}.ui-icon-arrowstop-1-s{background-position:-224px -32px}.ui-icon-arrowstop-1-w{background-position:-240px -32px}.ui-icon-arrowthick-1-n{background-position:0 -48px}.ui-icon-arrowthick-1-ne{background-position:-16px -48px}.ui-icon-arrowthick-1-e{background-position:-32px -48px}.ui-icon-arrowthick-1-se{background-position:-48px -48px}.ui-icon-arrowthick-1-s{background-position:-64px -48px}.ui-icon-arrowthick-1-sw{background-position:-80px -48px}.ui-icon-arrowthick-1-w{background-position:-96px -48px}.ui-icon-arrowthick-1-nw{background-position:-112px -48px}.ui-icon-arrowthick-2-n-s{background-position:-128px -48px}.ui-icon-arrowthick-2-ne-sw{background-position:-144px -48px}.ui-icon-arrowthick-2-e-w{background-position:-160px -48px}.ui-icon-arrowthick-2-se-nw{background-position:-176px -48px}.ui-icon-arrowthickstop-1-n{background-position:-192px -48px}.ui-icon-arrowthickstop-1-e{background-position:-208px -48px}.ui-icon-arrowthickstop-1-s{background-position:-224px -48px}.ui-icon-arrowthickstop-1-w{background-position:-240px -48px}.ui-icon-arrowreturnthick-1-w{background-position:0 -64px}.ui-icon-arrowreturnthick-1-n{background-position:-16px -64px}.ui-icon-arrowreturnthick-1-e{background-position:-32px -64px}.ui-icon-arrowreturnthick-1-s{background-position:-48px -64px}.ui-icon-arrowreturn-1-w{background-position:-64px -64px}.ui-icon-arrowreturn-1-n{background-position:-80px -64px}.ui-icon-arrowreturn-1-e{background-position:-96px -64px}.ui-icon-arrowreturn-1-s{background-position:-112px -64px}.ui-icon-arrowrefresh-1-w{background-position:-128px -64px}.ui-icon-arrowrefresh-1-n{background-position:-144px -64px}.ui-icon-arrowrefresh-1-e{background-position:-160px -64px}.ui-icon-arrowrefresh-1-s{background-position:-176px -64px}.ui-icon-arrow-4{background-position:0 -80px}.ui-icon-arrow-4-diag{background-position:-16px -80px}.ui-icon-extlink{background-position:-32px -80px}.ui-icon-newwin{background-position:-48px -80px}.ui-icon-refresh{background-position:-64px -80px}.ui-icon-shuffle{background-position:-80px -80px}.ui-icon-transfer-e-w{background-position:-96px -80px}.ui-icon-transferthick-e-w{background-position:-112px -80px}.ui-icon-folder-collapsed{background-position:0 -96px}.ui-icon-folder-open{background-position:-16px -96px}.ui-icon-document{background-position:-32px -96px}.ui-icon-document-b{background-position:-48px -96px}.ui-icon-note{background-position:-64px -96px}.ui-icon-mail-closed{background-position:-80px -96px}.ui-icon-mail-open{background-position:-96px -96px}.ui-icon-suitcase{background-position:-112px -96px}.ui-icon-comment{background-position:-128px -96px}.ui-icon-person{background-position:-144px -96px}.ui-icon-print{background-position:-160px -96px}.ui-icon-trash{background-position:-176px -96px}.ui-icon-locked{background-position:-192px -96px}.ui-icon-unlocked{background-position:-208px -96px}.ui-icon-bookmark{background-position:-224px -96px}.ui-icon-tag{background-position:-240px -96px}.ui-icon-home{background-position:0 -112px}.ui-icon-flag{background-position:-16px -112px}.ui-icon-calendar{background-position:-32px -112px}.ui-icon-cart{background-position:-48px -112px}.ui-icon-pencil{background-position:-64px -112px}.ui-icon-clock{background-position:-80px -112px}.ui-icon-disk{background-position:-96px -112px}.ui-icon-calculator{background-position:-112px -112px}.ui-icon-zoomin{background-position:-128px -112px}.ui-icon-zoomout{background-position:-144px -112px}.ui-icon-search{background-position:-160px -112px}.ui-icon-wrench{background-position:-176px -112px}.ui-icon-gear{background-position:-192px -112px}.ui-icon-heart{background-position:-208px -112px}.ui-icon-star{background-position:-224px -112px}.ui-icon-link{background-position:-240px -112px}.ui-icon-cancel{background-position:0 -128px}.ui-icon-plus{background-position:-16px -128px}.ui-icon-plusthick{background-position:-32px -128px}.ui-icon-minus{background-position:-48px -128px}.ui-icon-minusthick{background-position:-64px -128px}.ui-icon-close{background-position:-80px -128px}.ui-icon-closethick{background-position:-96px -128px}.ui-icon-key{background-position:-112px -128px}.ui-icon-lightbulb{background-position:-128px -128px}.ui-icon-scissors{background-position:-144px -128px}.ui-icon-clipboard{background-position:-160px -128px}.ui-icon-copy{background-position:-176px -128px}.ui-icon-contact{background-position:-192px -128px}.ui-icon-image{background-position:-208px -128px}.ui-icon-video{background-position:-224px -128px}.ui-icon-script{background-position:-240px -128px}.ui-icon-alert{background-position:0 -144px}.ui-icon-info{background-position:-16px -144px}.ui-icon-notice{background-position:-32px -144px}.ui-icon-help{background-position:-48px -144px}.ui-icon-check{background-position:-64px -144px}.ui-icon-bullet{background-position:-80px -144px}.ui-icon-radio-off{background-position:-96px -144px}.ui-icon-radio-on{background-position:-112px -144px}.ui-icon-pin-w{background-position:-128px -144px}.ui-icon-pin-s{background-position:-144px -144px}.ui-icon-play{background-position:0 -160px}.ui-icon-pause{background-position:-16px -160px}.ui-icon-seek-next{background-position:-32px -160px}.ui-icon-seek-prev{background-position:-48px -160px}.ui-icon-seek-end{background-position:-64px -160px}.ui-icon-seek-start{background-position:-80px -160px}.ui-icon-seek-first{background-position:-80px -160px}.ui-icon-stop{background-position:-96px -160px}.ui-icon-eject{background-position:-112px -160px}.ui-icon-volume-off{background-position:-128px -160px}.ui-icon-volume-on{background-position:-144px -160px}.ui-icon-power{background-position:0 -176px}.ui-icon-signal-diag{background-position:-16px -176px}.ui-icon-signal{background-position:-32px -176px}.ui-icon-battery-0{background-position:-48px -176px}.ui-icon-battery-1{background-position:-64px -176px}.ui-icon-battery-2{background-position:-80px -176px}.ui-icon-battery-3{background-position:-96px -176px}.ui-icon-circle-plus{background-position:0 -192px}.ui-icon-circle-minus{background-position:-16px -192px}.ui-icon-circle-close{background-position:-32px -192px}.ui-icon-circle-triangle-e{background-position:-48px -192px}.ui-icon-circle-triangle-s{background-position:-64px -192px}.ui-icon-circle-triangle-w{background-position:-80px -192px}.ui-icon-circle-triangle-n{background-position:-96px -192px}.ui-icon-circle-arrow-e{background-position:-112px -192px}.ui-icon-circle-arrow-s{background-position:-128px -192px}.ui-icon-circle-arrow-w{background-position:-144px -192px}.ui-icon-circle-arrow-n{background-position:-160px -192px}.ui-icon-circle-zoomin{background-position:-176px -192px}.ui-icon-circle-zoomout{background-position:-192px -192px}.ui-icon-circle-check{background-position:-208px -192px}.ui-icon-circlesmall-plus{background-position:0 -208px}.ui-icon-circlesmall-minus{background-position:-16px -208px}.ui-icon-circlesmall-close{background-position:-32px -208px}.ui-icon-squaresmall-plus{background-position:-48px -208px}.ui-icon-squaresmall-minus{background-position:-64px -208px}.ui-icon-squaresmall-close{background-position:-80px -208px}.ui-icon-grip-dotted-vertical{background-position:0 -224px}.ui-icon-grip-dotted-horizontal{background-position:-16px -224px}.ui-icon-grip-solid-vertical{background-position:-32px -224px}.ui-icon-grip-solid-horizontal{background-position:-48px -224px}.ui-icon-gripsmall-diagonal-se{background-position:-64px -224px}.ui-icon-grip-diagonal-se{background-position:-80px -224px}.ui-corner-all,.ui-corner-top,.ui-corner-left,.ui-corner-tl{-moz-border-radius-topleft:3px;-webkit-border-top-left-radius:3px;-khtml-border-top-left-radius:3px;border-top-left-radius:3px}.ui-corner-all,.ui-corner-top,.ui-corner-right,.ui-corner-tr{-moz-border-radius-topright:3px;-webkit-border-top-right-radius:3px;-khtml-border-top-right-radius:3px;border-top-right-radius:3px}.ui-corner-all,.ui-corner-bottom,.ui-corner-left,.ui-corner-bl{-moz-border-radius-bottomleft:3px;-webkit-border-bottom-left-radius:3px;-khtml-border-bottom-left-radius:3px;/* border-bottom-left-radius:3px; */}.ui-corner-all,.ui-corner-bottom,.ui-corner-right,.ui-corner-br{-moz-border-radius-bottomright:3px;-webkit-border-bottom-right-radius:3px;-khtml-border-bottom-right-radius:3px;border-bottom-right-radius:3px;}.ui-widget-overlay{background:#1f2226;opacity:.60;filter:Alpha(Opacity=60)}.ui-widget-shadow{margin:-8px 0 0 -8px;padding:8px;background:#1f2226;opacity:.60;filter:Alpha(Opacity=60);-moz-border-radius:8px;-khtml-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}.ui-resizable{position:relative}.ui-resizable-handle{position:absolute;font-size:.1px;z-index:99999;display:block}.ui-resizable-disabled .ui-resizable-handle,.ui-resizable-autohide .ui-resizable-handle{display:none}.ui-resizable-n{cursor:n-resize;height:7px;width:100%;top:-5px;left:0}.ui-resizable-s{cursor:s-resize;height:7px;width:100%;bottom:-5px;left:0}.ui-resizable-e{cursor:e-resize;width:7px;right:-5px;top:0;height:100%}.ui-resizable-w{cursor:w-resize;width:7px;left:-5px;top:0;height:100%}.ui-resizable-se{cursor:se-resize;width:12px;height:12px;right:1px;bottom:1px}.ui-resizable-sw{cursor:sw-resize;width:9px;height:9px;left:-5px;bottom:-5px}.ui-resizable-nw{cursor:nw-resize;width:9px;height:9px;left:-5px;top:-5px}.ui-resizable-ne{cursor:ne-resize;width:9px;height:9px;right:-5px;top:-5px}.ui-selectable-helper{position:absolute;z-index:100;border:1px dotted black}.ui-accordion .ui-accordion-header a{display:block;font-size:1em;padding:.5em .5em .5em .7em;font-weight:bold}.ui-accordion .ui-accordion-header{border:1px solid #d9d9d9;background:#f6f7f9}.ui-accordion .ui-accordion-header.ui-state-hover{background:#ededf0}.ui-accordion .ui-accordion-header.ui-state-active{background:#fff;border-left:0 none;border-right:0 none;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}.ui-tabs.ui-widget-content:not(.ui-ribbon){border:0 none}.ui-tabs:not(.ui-ribbon) .ui-tabs-nav{background:transparent}.ui-tabs .ui-tabs-nav>li.ui-state-default{background:#f6f7f9}.ui-tabs .ui-tabs-nav>li.ui-state-default.ui-state-hover{background:#ededf0}.ui-tabs .ui-tabs-nav>li.ui-state-default.ui-state-active{background:#fff;font-weight:normal;color:#555}.ui-button .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-dialog{position:absolute;padding:.2em;width:300px;overflow:visible;border:0 none;-webkit-box-shadow:0 1px 4px rgba(0,0,0,0.75);-moz-box-shadow:0 1px 4px rgba(0,0,0,0.75);box-shadow:0 1px 4px rgba(0,0,0,0.75)}.ui-dialog .ui-dialog-titlebar{position:relative;background:transparent!important;padding:0 0 8px 0;margin:20px 20px 5px 20px;border:solid #e5e5e5;border-width:0 0 1px 0;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}.ui-dialog .ui-dialog-title{float:left;margin:.1em 16px .1em 0;color:#353536;font-size:20px!important}.ui-dialog .ui-dialog-content{position:relative;border:0;padding:15px 20px 20px 20px;background:0;overflow:auto;zoom:1}.ui-dialog .ui-dialog-buttonpane{text-align:left;border:solid #e5e5e5;border-width:1px 0 0 0;background:transparent;margin:20px 20px 10px 20px;padding:10px 0 0 0}.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset{float:right}.ui-dialog .ui-dialog-buttonpane button{margin:.5em .4em .5em 0;cursor:pointer}.ui-dialog .ui-resizable-se{width:14px;height:14px;right:3px;bottom:3px}.ui-draggable .ui-dialog-titlebar{cursor:move}.ui-slider{position:relative;text-align:left;background:#838688;border:0;-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.6) inset;-moz-box-shadow:0 1px 3px rgba(0,0,0,0.6) inset;box-shadow:0 1px 3px rgba(0,0,0,0.6) inset}.ui-slider .ui-slider-handle{position:absolute;z-index:2;width:17px!important;height:21px!important;cursor:default;background:url("https://www.primefaces.org/showcase/javax.faces.resource/images/slider_handles.png.xhtml?ln=primefaces-omega") 0 0 no-repeat;outline:0;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0;border:0}.ui-slider .ui-slider-range{position:absolute;z-index:1;font-size:.7em;display:block;border:0;background:#14a4ff;-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.6) inset;-moz-box-shadow:0 1px 3px rgba(0,0,0,0.6) inset;box-shadow:0 1px 3px rgba(0,0,0,0.6) inset;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px}.ui-slider .ui-slider-handle.ui-state-active{background-position:-17px 0}.ui-slider-horizontal{height:6px}.ui-slider-horizontal .ui-slider-handle{top:-3px!important;margin-left:-.6em}.ui-slider-horizontal .ui-slider-range{top:0;height:100%}.ui-slider-horizontal .ui-slider-range-min{left:0}.ui-slider-horizontal .ui-slider-range-max{right:0}.ui-slider-vertical{width:.8em;height:100px}.ui-slider-vertical .ui-slider-handle{left:-.2em!important;margin-left:0;margin-bottom:-.6em}.ui-slider-vertical .ui-slider-range{left:0;width:100%}.ui-slider-vertical .ui-slider-range-min{bottom:0}.ui-slider-vertical .ui-slider-range-max{top:0}.ui-datepicker{padding:0!important}.ui-datepicker .ui-datepicker-header,.ui-datepicker .ui-timepicker-div>.ui-widget-header{position:relative;padding:.4em 0;border:1px solid #3b3e40}.ui-datepicker .ui-datepicker-header,.ui-datepicker .ui-timepicker-div>.ui-widget-header{background:#595c5d;background:-moz-linear-gradient(top,#595c5d 0,#474a4b 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#595c5d),color-stop(100%,#474a4b));background:-webkit-linear-gradient(top,#595c5d 0,#474a4b 100%);background:-o-linear-gradient(top,#595c5d 0,#474a4b 100%);background:-ms-linear-gradient(top,#595c5d 0,#474a4b 100%);background:linear-gradient(top,#595c5d 0,#474a4b 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#595c5d',endColorstr='#474a4b',GradientType=0);-webkit-box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;-moz-box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0}.ui-datepicker th{color:#e8e9ea!important;text-shadow:0 -1px 0 rgba(0,0,0,0.4);border:#27292b solid!important;border-width:1px 0!important;background:#77797a;background:-moz-linear-gradient(top,#77797a 0,#5b5e5e 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#77797a),color-stop(100%,#5b5e5e));background:-webkit-linear-gradient(top,#77797a 0,#5b5e5e 100%);background:-o-linear-gradient(top,#77797a 0,#5b5e5e 100%);background:-ms-linear-gradient(top,#77797a 0,#5b5e5e 100%);background:linear-gradient(top,#77797a 0,#5b5e5e 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77797a',endColorstr='#5b5e5e',GradientType=0);-webkit-box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;-moz-box-shadow:0 1px 0 rgba(255,255,255,0.15) inset;box-shadow:0 1px 0 rgba(255,255,255,0.15) inset}.ui-datepicker .ui-datepicker-prev,.ui-datepicker .ui-datepicker-next{position:absolute;width:16px;height:16px;cursor:pointer}.ui-datepicker .ui-datepicker-prev-hover,.ui-datepicker .ui-datepicker-next-hover{top:2px!important}.ui-datepicker .ui-datepicker-prev{left:2px!important}.ui-datepicker .ui-datepicker-next{right:2px!important}.ui-datepicker .ui-datepicker-prev-hover{left:2px!important}.ui-datepicker .ui-datepicker-next-hover{right:2px!important}.ui-datepicker .ui-datepicker-prev span,.ui-datepicker .ui-datepicker-next span{display:block;position:absolute;left:50%;margin-left:-8px;top:50%;margin-top:-8px}.ui-datepicker .ui-datepicker-title{margin:0 2.3em;line-height:1.8em;text-align:center;color:#e8e9ea;text-shadow:0 -1px 0 rgba(0,0,0,0.4)}.ui-datepicker .ui-datepicker-title select{font-size:1em;margin:1px 0}.ui-datepicker select.ui-datepicker-month-year{width:100%}.ui-datepicker select.ui-datepicker-month,.ui-datepicker select.ui-datepicker-year{width:49%}.ui-datepicker table{font-size:.9em;border-collapse:collapse;margin:-1px 0 0 0!important}.ui-datepicker th{padding:.7em 0;text-align:center;font-weight:bold;border:0;font-size:10px;color:#acacac;border-bottom:1px solid #cdcdcd!important}.ui-datepicker td{border:0;padding:0!important;border:1px solid #cdcdcd}.ui-datepicker td a,.ui-datepicker td span{display:block;padding:0!important;border:0 none!important;line-height:30px;text-align:center!important;font-size:12px;text-decoration:none;font-weight:bold!important}.ui-datepicker td a.ui-state-default{color:#5d5d5d;background:#e8e9ea;background:-moz-linear-gradient(top,#e8e9ea 0,#e3e3e3 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#e8e9ea),color-stop(100%,#e3e3e3));background:-webkit-linear-gradient(top,#e8e9ea 0,#e3e3e3 100%);background:-o-linear-gradient(top,#e8e9ea 0,#e3e3e3 100%);background:-ms-linear-gradient(top,#e8e9ea 0,#e3e3e3 100%);background:linear-gradient(top,#e8e9ea 0,#e3e3e3 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e8e9ea',endColorstr='#e3e3e3',GradientType=0);-webkit-box-shadow:0 1px 0 rgba(255,255,255,0.35) inset;-moz-box-shadow:0 1px 0 rgba(255,255,255,0.35) inset;box-shadow:0 1px 0 rgba(255,255,255,0.35) inset}.ui-datepicker-current-day a{background:#186ba0!important;filter:none!important;color:#fff!important}.ui-datepicker-today a.ui-state-highlight{text-shadow:1px 1px 1px #156090}.ui-datepicker td a.ui-state-default.ui-state-hover{background:#eee}td.ui-datepicker-unselectable{border-color:#ebebeb!important;background:#fcfcfc;background:-moz-linear-gradient(top,#fcfcfc 0,#efefef 100%);background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#fcfcfc),color-stop(100%,#efefef));background:-webkit-linear-gradient(top,#fcfcfc 0,#efefef 100%);background:-o-linear-gradient(top,#fcfcfc 0,#efefef 100%);background:-ms-linear-gradient(top,#fcfcfc 0,#efefef 100%);background:linear-gradient(top,#fcfcfc 0,#efefef 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc',endColorstr='#efefef',GradientType=0)}.ui-datepicker .ui-datepicker-buttonpane{background-image:none;margin:.7em 0 0 0;padding:0 .2em;border-left:0;border-right:0;border-bottom:0}.ui-datepicker .ui-datepicker-buttonpane button{float:right;margin:.5em .2em .4em;cursor:pointer;padding:.2em .6em .3em .6em;width:auto;overflow:visible}.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current{float:left}.ui-datepicker .ui-icon-circle-triangle-w{background:url("https://www.primefaces.org/showcase/javax.faces.resource/images/icons_16.png.xhtml?ln=primefaces-omega") 0 -128px no-repeat!important}.ui-datepicker .ui-icon-circle-triangle-e{background:url("https://www.primefaces.org/showcase/javax.faces.resource/images/icons_16.png.xhtml?ln=primefaces-omega") 0 -112px no-repeat!important}.ui-datepicker-header .ui-state-hover{border:0;background:0}.ui-datepicker.ui-datepicker-multi{width:auto}.ui-datepicker-multi .ui-datepicker-group{float:left}.ui-datepicker-multi .ui-datepicker-group table{width:95%;margin:0 auto .4em}.ui-datepicker-multi-2 .ui-datepicker-group{width:50%}.ui-datepicker-multi-3 .ui-datepicker-group{width:33.3%}.ui-datepicker-multi-4 .ui-datepicker-group{width:25%}.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header{border-left-width:0}.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header{border-left-width:0}.ui-datepicker-multi .ui-datepicker-buttonpane{clear:left}.ui-datepicker-row-break{clear:both;width:100%;font-size:0}#ui-datepicker-div{-moz-box-shadow:0 2px 5px rgba(0,0,0,0.8);-webkit-box-shadow:0 2px 5px rgba(0,0,0,0.8);box-shadow:0 2px 5px rgba(0,0,0,0.8)}.ui-progressbar .ui-progressbar-value{border:1px solid #156090;background:#186ba0}.ui-progressbar .ui-progressbar-label{color:#1f89ce}.ui-button{-webkit-transition:background-color .2s;-moz-transition:background-color .2s;-o-transition:background-color .2s;transition:background-color .2s}.ui-button,button.ui-button.ui-state-default,.ui-button.ui-state-default{border:1px solid #1f89ce;color:#fff;background:#2399e5}button.ui-button.ui-state-hover,.ui-button.ui-state-hover,button.ui-button.ui-state-focus,.ui-button.ui-state-focus{border:1px solid #156090;background:#1f89ce;outline:0 none}button.ui-button.ui-state-active,.ui-button.ui-state-active{border:1px solid #156090;background:#186ba0}.ui-toggle-switch label{text-align:left;width:auto;cursor:pointer}.ui-state-highlight .ui-chkbox-box .ui-icon,.ui-state-highlight .ui-radiobutton-box .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_2e83ff_256x240.png.xhtml?ln=primefaces-omega")}.ui-chkbox-box.ui-state-active,.ui-chkbox-box.ui-state-focus.ui-state-active,.ui-radiobutton-box.ui-state-active,.ui-radiobutton-box.ui-state-focus.ui-state-active{border:1px solid #156090;background:#186ba0;color:#fff}.ui-chkbox-box.ui-state-active .ui-icon,.ui-radiobutton-box.ui-state-active .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.timeline-content .timeline-event-selected{background:#186ba0 none repeat scroll 0 0;border:1px solid #156090;color:#fff}.ui-inputfield,.ui-widget-content .ui-inputfield,.ui-widget-header .ui-inputfield{background:#fff;color:#222}.ui-inputfield.ui-state-focus,.ui-widget-content .ui-inputfield.ui-state-focus,.ui-widget-header .ui-inputfield.ui-state-focus{-moz-box-shadow:0 0 5px #1f89ce;-webkit-box-shadow:0 0 5px #1f89ce;box-shadow:0 0 5px #1f89ce}.ui-inputswitch-on{background:#186ba0!important;color:#fff!important}.ui-paginator .ui-paginator-page.ui-state-active{background:#186ba0;color:#fff;border-color:#156090}.ui-panelmenu .ui-panelmenu-header.ui-state-active,.ui-panelmenu .ui-panelmenu-header.ui-state-active a{background:#1f89ce;color:#fff;border-color:#168dd9}.ui-panelmenu .ui-panelmenu-header.ui-state-active .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-datatable th{font-weight:bold}.ui-datatable th.ui-state-default,.ui-datatable tfoot td.ui-state-default{background:#ebedf0;border-color:#d9d9d9}.ui-datatable th.ui-state-hover{background:#d3d5d8;border-color:#d9d9d9}.ui-datatable th.ui-state-active{background:#186ba0;color:#fff}.ui-datatable th.ui-state-active .ui-icon-carat-2-n-s{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-datatable-odd{background-color:#fafafb}.ui-datatable-rowordering.ui-state-active{background:#14a4ff none repeat scroll 0 0}.ui-datatable tbody>tr.ui-widget-content{border-color:#d9d9d9}.ui-datatable .ui-selection-column .ui-radiobutton-box.ui-state-active,.ui-datatable .ui-selection-column .ui-chkbox-box.ui-state-active{background-color:#fff}.ui-datatable .ui-selection-column .ui-radiobutton-box .ui-icon,.ui-datatable .ui-selection-column .ui-chkbox-box .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_454545_256x240.png.xhtml?ln=primefaces-omega")}.ui-panel.ui-widget{padding:0}.ui-panel.ui-widget .ui-panel-titlebar.ui-corner-all{-moz-border-radius-bottom-left:0;-webkit-border-bottom-left-radius:0;-khtml-border-bottom-left-radius:0;border-bottom-left-radius:0;-moz-border-radius-bottom-right:0;-webkit-border-bottom-right-radius:0;-khtml-border-bottom-right-radius:0;border-bottom-right-radius:0}.ui-panel.ui-widget .ui-panel-titlebar{border-width:0 0 1px 0}.ui-ribbon-group-content .ui-button.ui-state-default{border:1px solid #d3d3d3;background:#f9f9fc;font-weight:normal;color:#555;box-shadow:none!important;text-shadow:none!important}.ui-ribbon-group-content .ui-button.ui-state-hover{border:1px solid #a6a6ac;background:#ededf0;font-weight:normal;color:#212121}.ui-ribbon-group-content .ui-button.ui-state-default span{text-shadow:none!important}.ui-treetable th{font-weight:bold}.ui-treetable th.ui-state-default{background:#ebedf0;border-color:#d9d9d9}.ui-treetable th.ui-state-hover{background:#d3d5d8;border-color:#d9d9d9}.ui-treetable th.ui-state-active{background:#186ba0;color:#fff}.ui-treetable th.ui-state-active .ui-icon-carat-2-n-s{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-treetable tbody>tr.ui-widget-content{border-color:#d9d9d9}.ui-treetable .ui-selection .ui-chkbox-box{background-color:#fff}.ui-treetable .ui-selection .ui-chkbox-box .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_454545_256x240.png.xhtml?ln=primefaces-omega")}.ui-treetable .ui-paginator.ui-paginator-bottom{border-top:1px solid #d9d9d9}.ui-inputfield{-webkit-transition:.2s;-moz-transition:.2s;-o-transition:.2s;transition:.2s}.ui-selectbooleanbutton.ui-button.ui-state-default,.ui-selectonebutton .ui-button.ui-state-default,.ui-selectmanybutton .ui-button.ui-state-default{border:1px solid #d6d6d6;background:#fff;font-weight:normal;color:#555}.ui-selectbooleanbutton.ui-button.ui-state-hover,.ui-selectbooleanbutton.ui-button.ui-state-focus,.ui-selectonebutton .ui-button.ui-state-hover,.ui-selectonebutton .ui-button.ui-state-focus,.ui-selectmanybutton .ui-button.ui-state-hover,.ui-selectmanybutton .ui-button.ui-state-focus{border:1px solid #c0c0c0;background:#eee;font-weight:normal;color:#212121}.ui-selectbooleanbutton.ui-button.ui-state-active,.ui-selectonebutton .ui-button.ui-state-active,.ui-selectmanybutton .ui-button.ui-state-active{border:1px solid #156090;background:#186ba0;color:#fff}.ui-selectbooleanbutton.ui-button.ui-state-default .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_454545_256x240.png.xhtml?ln=primefaces-omega")}.ui-selectbooleanbutton.ui-button.ui-state-hover.ui-icon,.ui-selectbooleanbutton.ui-button.ui-state-focus .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_454545_256x240.png.xhtml?ln=primefaces-omega")}.ui-selectbooleanbutton.ui-button.ui-state-active .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-selectonemenu .ui-selectonemenu-trigger,.ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger{border-color:#fff}.ui-selectcheckboxmenu.ui-state-focus .ui-selectcheckboxmenu-label,.ui-selectcheckboxmenu .ui-selectcheckboxmenu-label.ui-state-hover{background-color:#fff}.ui-selectcheckboxmenu .ui-selectcheckboxmenu-token.ui-state-active,.ui-autocomplete .ui-autocomplete-token.ui-state-active,.ui-chips .ui-chips-token.ui-state-active{background:#186ba0;color:#fff}.ui-selectcheckboxmenu .ui-selectcheckboxmenu-token .ui-selectcheckboxmenu-token-icon,.ui-autocomplete .ui-autocomplete-token .ui-autocomplete-token-icon,.ui-chips .ui-chips-token .ui-chips-token-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-tabmenu li.ui-state-active{border:1px solid #156090;background:#186ba0;color:#fff}.ui-tabmenu li.ui-state-active .ui-menuitem-text{color:#fff}.ui-tabmenu li.ui-state-active .ui-menuitem-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-slidemenu .ui-menu-child{-webkit-box-shadow:none!important;-moz-box-shadow:none!important;box-shadow:none!important}.ui-steps .ui-state-highlight span{color:#fff}.ui-growl-info,.ui-messages .ui-messages-info,.ui-message.ui-message-info{color:#fff;background-color:#9ccc65;border-color:#9ccc65}.ui-growl-warn,.ui-messages .ui-messages-warn,.ui-message.ui-message-warn{color:#fff;background-color:#ffa726;border-color:#ffa726}.ui-growl-error,.ui-growl-fatal,.ui-messages .ui-messages-error,.ui-message.ui-message-error,.ui-messages .ui-messages-fatal,.ui-message.ui-message-fatal{color:#fff;background-color:#ef5350;border-color:#ef5350}.ui-messages .ui-icon{background-image:url("https://www.primefaces.org/showcase/javax.faces.resource/images/ui-icons_ffffff_256x240.png.xhtml?ln=primefaces-omega")}.ui-shadow{-webkit-box-shadow:0 1px 3px 0 rgba(0,0,0,0.3)!important;-moz-box-shadow:0 1px 3px 0 rgba(0,0,0,0.3)!important;box-shadow:0 1px 3px 0 rgba(0,0,0,0.3)!important}.ui-scrollpanel .ui-scrollpanel-drag{background-color:#dcdcdc}.ui-inputgroup .ui-inputgroup-addon,.ui-inputgroup .ui-inputgroup-addon-checkbox{border-color:#d6d6d6;background-color:#f0f0f0;color:#222}.ui-inputgroup .ui-inputgroup-addon:first-child,.ui-inputgroup .ui-inputgroup-addon-checkbox:first-child{border-top-left-radius:3px;border-bottom-left-radius:3px}.ui-inputgroup .ui-inputgroup-addon:last-child,.ui-inputgroup .ui-inputgroup-addon-checkbox:last-child{border-top-right-radius:3px;border-bottom-right-radius:3px}.ui-inputgroup .ui-button:first-child{border-top-left-radius:3px;border-bottom-left-radius:3px}.ui-inputgroup .ui-button:last-child{border-top-right-radius:3px;border-bottom-right-radius:3px}.ui-tooltip .ui-tooltip-text.ui-state-error{border:0 none;background-color:#ef5350}.ui-tooltip .ui-tooltip-arrow.ui-state-error{border-right-color:#ef5350}       
+    </style>
+
+</html>
+
